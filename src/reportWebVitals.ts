@@ -13,3 +13,4 @@ const reportWebVitals = (onPerfEntry?: ReportHandler) => {
 };
 
 export default reportWebVitals;
+//做埋点上报

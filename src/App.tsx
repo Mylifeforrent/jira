@@ -24,3 +24,5 @@ function App() {
 }
 
 export default App;
+
+//App.tsx is used to describe our project structure,pages etc..
