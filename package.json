@@ -27,7 +27,8 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "prettier"
     ]
   },
   "browserslist": {
@@ -43,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "eslint-config-prettier": "^10.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
     "prettier": "3.5.3"
