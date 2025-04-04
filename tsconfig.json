@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",//this will make import file path looks more use friendly, path will become from ".././a.tsx" --> "a.tsx"
     "target": "es5",
     "lib": [
       "dom",
