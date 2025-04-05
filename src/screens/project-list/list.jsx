@@ -1,7 +1,7 @@
 import React from "react";
 export const List = ({ list, users, userMap }) => {
-  console.log("userMap ->", userMap);
-  console.log("list ->", list);
+  // console.log("userMap ->", userMap);
+  // console.log("list ->", list);
   return (
     <table>
       <thead>
