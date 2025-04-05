@@ -1,5 +1,7 @@
 import React from "react";
-export const List = ({ list, users }) => {
+export const List = ({ list, users, userMap }) => {
+  console.log("userMap ->", userMap);
+  console.log("list ->", list);
   return (
     <table>
       <thead>
@@ -12,7 +14,7 @@ export const List = ({ list, users }) => {
         {list.map((item) => (
           <tr key={item.id}>
             <td>{item.name}</td>
-            <td>{users.filter((user) => user.id === item.id)?.name}</td>
+            <td>{userMap[item.personId].name}</td>
           </tr>
         ))}
       </tbody>
