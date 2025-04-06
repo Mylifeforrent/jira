@@ -47,7 +47,7 @@ export const debounce = (func: any, delay?: number) => {
  * @returns {any} - 防抖处理后的值
  */
 //后面是用范型来优化，让unknown的类型，接收到啥就严格定义输出的结果应该是啥
-export const useDebounce = (value: unknown, delay?: number) => {
+export const useDebounce = <S,>(value: S, delay?: number): S => {
   // 定义一个状态变量用于存储防抖处理后的值
   const [debouncedValue, setDebouncedValue] = useState(value);
 
