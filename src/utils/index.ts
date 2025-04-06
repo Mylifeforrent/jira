@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import exp from "node:constants";
 
 //unknown is more strict than any, it is a type-safe way to represent a value that could be of any type
 export const isFalsy = (value: unknown): boolean => {
@@ -47,7 +48,7 @@ export const debounce = (func: any, delay?: number) => {
  * @returns {any} - 防抖处理后的值
  */
 //后面是用范型来优化，让unknown的类型，接收到啥就严格定义输出的结果应该是啥
-export const useDebounce = <S,>(value: S, delay?: number): S => {
+export const useDebounce = <S>(value: S, delay?: number): S => {
   // 定义一个状态变量用于存储防抖处理后的值
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -70,6 +71,27 @@ export const useDebounce = <S,>(value: S, delay?: number): S => {
 
   // 返回防抖处理后的值
   return debouncedValue;
+};
+
+export const useArray = <T>(array: T[]) => {
+  //useState本来就是一个tuple类型， 他和array的区别就是 他可以装好几种不同类型的数据，函数，字符串等。。。
+  const [value, setValue] = useState(array);
+
+  const add = (item: T) => {
+    setValue([...value, item]);
+  };
+
+  const removeIndex = (index: number) => {
+    const copy = [...value];
+    copy.splice(index, 1);
+    setValue(copy);
+  };
+
+  const clear = () => {
+    setValue([]);
+  };
+
+  return { value, add, removeIndex, clear };
 };
 
 /**
