@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
-export const isFalsy = (value: any) => {
+//unknown is more strict than any, it is a type-safe way to represent a value that could be of any type
+export const isFalsy = (value: unknown): boolean => {
   return value === 0 ? false : !value;
 };
 
-export const cleanObject = (object: object) => {
+export const cleanObject = (object: object): {} => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
     // @ts-ignore
@@ -18,7 +19,7 @@ export const cleanObject = (object: object) => {
 };
 
 //define specific hook function, const name must be start with 'use' prefix
-export const useMount = (callback: () => void) => {
+export const useMount = (callback: () => void): void => {
   useEffect(() => {
     callback();
   }, []);
@@ -45,7 +46,8 @@ export const debounce = (func: any, delay?: number) => {
  * @param {number} delay - 延迟时间（毫秒）
  * @returns {any} - 防抖处理后的值
  */
-export const useDebounce = (value: any, delay: any) => {
+//后面是用范型来优化，让unknown的类型，接收到啥就严格定义输出的结果应该是啥
+export const useDebounce = (value: unknown, delay?: number) => {
   // 定义一个状态变量用于存储防抖处理后的值
   const [debouncedValue, setDebouncedValue] = useState(value);
 
