@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 
-export const isFalsy = (value) => {
+export const isFalsy = (value: any) => {
   return value === 0 ? false : !value;
 };
 
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
+    // @ts-ignore
     const value = result[key];
     if (isFalsy(value)) {
+      // @ts-ignore
       delete result[key];
     }
   });
@@ -16,7 +18,7 @@ export const cleanObject = (object) => {
 };
 
 //define specific hook function, const name must be start with 'use' prefix
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
   }, []);
@@ -24,9 +26,9 @@ export const useMount = (callback) => {
 
 //this function is used to get pram lately,延迟执行的函数， 避免输入过滤条件的时候频繁的call api， 这个闭包函数比较有用
 //只要是连续执行的，后一个执行的函数会把前一个执行函数积累的数据全部清空，这就可以起到一个避免堆积的效果
-export const debounce = (func, delay) => {
-  let timeout;
-  return (...args) => {
+export const debounce = (func: any, delay?: number) => {
+  let timeout: any;
+  return (...args: any) => {
     const context = this;
     if (timeout) {
       clearTimeout(timeout);
@@ -43,7 +45,7 @@ export const debounce = (func, delay) => {
  * @param {number} delay - 延迟时间（毫秒）
  * @returns {any} - 防抖处理后的值
  */
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: any, delay: any) => {
   // 定义一个状态变量用于存储防抖处理后的值
   const [debouncedValue, setDebouncedValue] = useState(value);
 

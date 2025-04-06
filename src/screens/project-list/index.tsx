@@ -1,9 +1,9 @@
-import { SearchPanel } from "./search-panel.jsx";
-import { List } from "./list.jsx";
 import { useEffect, useState } from "react";
 import React from "react";
-import { cleanObject, useDebounce, useMount } from "../../utils/index.js";
+import { cleanObject, useDebounce, useMount } from "../../utils";
 import qs from "qs";
+import { SearchPanel } from "./search-panel";
+import { List } from "./list";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -35,7 +35,7 @@ export const ProjectListScreen = () => {
         console.log("apiurl:", apiUrl, "initialized users:", data);
         setUsers(data);
 
-        const userMap = data.reduce((acc, user) => {
+        const userMap = data.reduce((acc: any, user: any) => {
           acc[user.id] = user;
           return acc;
         }, {});
