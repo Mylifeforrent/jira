@@ -1,64 +1,67 @@
+import { useAsync } from "utils/use-async";
+import { Project } from "screens/project-list/list";
+import { useCallback, useEffect } from "react";
+import { cleanObject } from "utils/index";
 import { useHttp } from "utils/http";
-import { QueryKey, useMutation, useQuery } from "react-query";
-import {
-  useAddConfig,
-  useDeleteConfig,
-  useEditConfig,
-} from "utils/use-optimistic-options";
-import { Project } from "types/project";
+import { useUrlQueryParam } from "utils/url";
 
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
+  const { run, ...result } = useAsync<Project[]>();
 
-  return useQuery<Project[]>(["projects", param], () =>
-    client("projects", { data: param })
+  const fetchProjects = useCallback(
+    () => client("projects", { data: cleanObject(param || {}) }),
+    [param, client]
   );
+
+  useEffect(() => {
+    run(fetchProjects(), {
+      retry: fetchProjects,
+    });
+  }, [param, run, fetchProjects]);
+
+  return result;
 };
 
-export const useEditProject = (queryKey: QueryKey) => {
+export const useEditProject = () => {
+  const { run, ...asyncResult } = useAsync();
   const client = useHttp();
-  return useMutation(
-    (params: Partial<Project>) =>
+  const mutate = (params: Partial<Project>) => {
+    return run(
       client(`projects/${params.id}`, {
-        method: "PATCH",
         data: params,
-      }),
-    useEditConfig(queryKey)
-  );
+        method: "PATCH",
+      })
+    );
+  };
+  return {
+    mutate,
+    ...asyncResult,
+  };
 };
 
-export const useAddProject = (queryKey: QueryKey) => {
+export const useAddProject = () => {
+  const { run, ...asyncResult } = useAsync();
   const client = useHttp();
-
-  return useMutation(
-    (params: Partial<Project>) =>
-      client(`projects`, {
+  const mutate = (params: Partial<Project>) => {
+    return run(
+      client(`projects/${params.id}`, {
         data: params,
         method: "POST",
-      }),
-    useAddConfig(queryKey)
-  );
+      })
+    );
+  };
+  return {
+    mutate,
+    ...asyncResult,
+  };
 };
 
-export const useDeleteProject = (queryKey: QueryKey) => {
-  const client = useHttp();
-
-  return useMutation(
-    ({ id }: { id: number }) =>
-      client(`projects/${id}`, {
-        method: "DELETE",
-      }),
-    useDeleteConfig(queryKey)
-  );
-};
-
-export const useProject = (id?: number) => {
-  const client = useHttp();
-  return useQuery<Project>(
-    ["project", { id }],
-    () => client(`projects/${id}`),
-    {
-      enabled: Boolean(id),
-    }
-  );
+export const useProjectModal = () => {
+  const [{ projectModalOpen }, setProjectModalOpen] = useUrlQueryParam([
+    "projectModalOpen",
+  ]);
+  const open = () => setProjectModalOpen({ projectModalOpen: true });
+  const close = () => setProjectModalOpen({ projectModalOpen: false });
+  return [projectModalOpen === "true", open, close] as const;
 };

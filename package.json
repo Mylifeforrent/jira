@@ -19,10 +19,9 @@
     "craco-less": "^1.17.1",
     "dayjs": "^1.9.7",
     "history": "^5.0.0",
-    "jira-dev-tool": "1.6.59",
+    "jira-dev-tool": "1.6.18",
     "qs": "^6.9.4",
     "react": "^17.0.1",
-    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
     "react-query": "^3.5.10",
@@ -36,10 +35,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -r git@github.com:sindu12jun/sindu12jun.github.io.git -b main",
-    "prepare": "husky install"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "rules": {
@@ -64,18 +60,21 @@
     ]
   },
   "devDependencies": {
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
-    "@testing-library/react-hooks": "^5.1.1",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/qs": "^6.9.5",
-    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-helmet": "^6.1.0",
     "eslint-config-prettier": "^6.15.0",
-    "husky": ">=6",
+    "husky": ">=4",
     "json-server": "^0.16.2",
     "lint-staged": ">=10",
-    "msw": "^0.28.1",
-    "prettier": "^2.2.1"
+    "prettier": "2.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "lint-staged": {
     "*.{js,css,md,ts,tsx}": "prettier --write"
