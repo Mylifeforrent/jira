@@ -1,125 +1,145 @@
-import { useEffect, useState } from "react";
-import exp from "node:constants";
+import { useEffect, useRef, useState } from "react";
 
-//unknown is more strict than any, it is a type-safe way to represent a value that could be of any type
-export const isFalsy = (value: unknown): boolean => {
-  return value === 0 ? false : !value;
-};
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
-export const cleanObject = (object: object): {} => {
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
+
+// let a: object
+// a = {name: 'jack'}
+// a = () => {
+// }
+// a = new RegExp('')
+//
+// let b: { [key: string]: unknown }
+// b = {name: 'Jack'}
+// b = () => {}
+// 在一个函数里，改变传入的对象本身是不好的
+export const cleanObject = (object: { [key: string]: unknown }) => {
+  // Object.assign({}, object)
   const result = { ...object };
   Object.keys(result).forEach((key) => {
-    // @ts-ignore
     const value = result[key];
-    if (isFalsy(value)) {
-      // @ts-ignore
+    if (isVoid(value)) {
       delete result[key];
     }
   });
   return result;
 };
 
-//define specific hook function, const name must be start with 'use' prefix
-export const useMount = (callback: () => void): void => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 
-//this function is used to get pram lately,延迟执行的函数， 避免输入过滤条件的时候频繁的call api， 这个闭包函数比较有用
-//只要是连续执行的，后一个执行的函数会把前一个执行函数积累的数据全部清空，这就可以起到一个避免堆积的效果
-export const debounce = (func: any, delay?: number) => {
-  let timeout: any;
-  return (...args: any) => {
-    const context = this;
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(() => {
-      func.apply(context, args);
-    }, delay);
-  };
-};
+// const debounce = (func, delay) => {
+//   let timeout;
+//   return (...param) => {
+//     if (timeout) {
+//       clearTimeout(timeout);
+//     }
+//     timeout = setTimeout(function() {
+//       func(...param);
+//     }, delay);
+//   }
+// }
+// const log = debounce(() => console.log('call'), 5000)
+// log()
+// log()
+// log()
+//   ...5s
+// 执行！
 
-/**
- * useDebounce Hook
- * @param {any} value - 需要防抖处理的值
- * @param {number} delay - 延迟时间（毫秒）
- * @returns {any} - 防抖处理后的值
- */
-//后面是用范型来优化，让unknown的类型，接收到啥就严格定义输出的结果应该是啥
-export const useDebounce = <S>(value: S, delay?: number): S => {
-  // 定义一个状态变量用于存储防抖处理后的值
+// debounce 原理讲解：
+// 0s ---------> 1s ---------> 2s --------> ...
+//     一定要理解：这三个函数都是同步操作，所以它们都是在 0~1s 这个时间段内瞬间完成的；
+//     log()#1 // timeout#1
+//     log()#2 // 发现 timeout#1！取消之，然后设置timeout#2
+//     log()#3 // 发现 timeout#2! 取消之，然后设置timeout#3
+//             // 所以，log()#3 结束后，就只剩timeout#3在独自等待了
+
+// 后面用泛型来规范类型
+export const useDebounce = <V>(value: V, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    // 每次 value 变化后，设置一个新的定时器
-    const handler = setTimeout(() => {
-      // 延迟 delay 时间后，更新 debouncedValue
-      setDebouncedValue(value);
-    }, delay);
+    // 每次在value变化以后，设置一个定时器
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
+    // 每次在上一个useEffect处理完以后再运行
+    return () => clearTimeout(timeout);
+  }, [value, delay]);
 
-    // 在 useEffect 清理阶段清除上一个定时器，
-    //     具体来说，当 value 或 delay 变化时：
-    // useEffect 会先执行清理函数，清除上一个定时器。
-    // 然后设置一个新的定时器。
-    // 这样可以确保在延迟时间内只有一个有效的定时器在运行，避免了多个定时器同时存在的问题。
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]); // 依赖项为 value 和 delay，当它们变化时重新执行 useEffect
-
-  // 返回防抖处理后的值
   return debouncedValue;
 };
 
-export const useArray = <T>(array: T[]) => {
-  //useState本来就是一个tuple类型， 他和array的区别就是 他可以装好几种不同类型的数据，函数，字符串等。。。
-  const [value, setValue] = useState(array);
-
-  const add = (item: T) => {
-    setValue([...value, item]);
+export const useArray = <T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray);
+  return {
+    value,
+    setValue,
+    add: (item: T) => setValue([...value, item]),
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const copy = [...value];
+      copy.splice(index, 1);
+      setValue(copy);
+    },
   };
+};
 
-  const removeIndex = (index: number) => {
-    const copy = [...value];
-    copy.splice(index, 1);
-    setValue(copy);
-  };
+export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
+  const oldTitle = useRef(document.title).current;
+  // 页面加载时: 旧title
+  // 加载后：新title
 
-  const clear = () => {
-    setValue([]);
-  };
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
 
-  return { value, add, removeIndex, clear };
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        // 如果不指定依赖，读到的就是旧title
+        document.title = oldTitle;
+      }
+    };
+  }, [keepOnUnmount, oldTitle]);
+};
+
+export const resetRoute = () => (window.location.href = window.location.origin);
+
+/**
+ * 传入一个对象，和键集合，返回对应的对象中的键值对
+ * @param obj
+ * @param keys
+ */
+export const subset = <
+  O extends { [key in string]: unknown },
+  K extends keyof O
+>(
+  obj: O,
+  keys: K[]
+) => {
+  const filteredEntries = Object.entries(obj).filter(([key]) =>
+    keys.includes(key as K)
+  );
+  return Object.fromEntries(filteredEntries) as Pick<O, K>;
 };
 
 /**
- * useEffect return那一段代码就是清理函数是吗， 而且清理函数是依赖想变化的时候最先执行的？
- * 是的，`useEffect` 返回的那一段代码就是清理函数。清理函数会在以下两种情况下执行：
- *
- * 1. 组件卸载时。
- * 2. 依赖项变化时，`useEffect` 会先执行清理函数，然后再执行主函数。
- *
- * 以下是一个简单的示例代码：
- *
- * ```javascript
- * import { useEffect } from "react";
- *
- * const MyComponent = () => {
- *   useEffect(() => {
- *     // 主函数
- *     console.log("Effect executed");
- *
- *     // 清理函数
- *     return () => {
- *       console.log("Cleanup executed");
- *     };
- *   }, []); // 依赖项为空数组，表示只在组件挂载和卸载时执行
- *
- *   return <div>My Component</div>;
- * };
- * ```
- *
- * 在这个示例中，当组件挂载时，会执行主函数并输出 "Effect executed"。当组件卸载时，会执行清理函数并输出 "Cleanup executed"。如果依赖项变化，清理函数会在主函数重新执行之前先执行。
+ * 返回组件的挂载状态，如果还没挂载或者已经卸载，返回false；反之，返回true
  */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+
+  return mountedRef;
+};
