@@ -4,10 +4,13 @@ import { List } from "screens/project-list/list";
 import { useDebounce, useDocumentTitle } from "../../utils";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
-import { useProjectModal, useProjects } from "utils/project";
+import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import { useProjectsSearchParams } from "screens/project-list/util";
 import { ButtonNoPadding, Row } from "components/lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "screens/project-list/project-list.slice";
+import { store } from "store";
 
 // 状态提升可以让组件共享状态，但是容易造成 prop drilling
 
@@ -18,19 +21,23 @@ import { ButtonNoPadding, Row } from "components/lib";
 // 我们希望，在静态代码中，就能找到其中的一些错误 -> 强类型
 export const ProjectListScreen = () => {
   useDocumentTitle("项目列表", false);
-  const [_, openModal, closeModal] = useProjectModal();
 
   const [param, setParam] = useProjectsSearchParams();
   const { isLoading, error, data: list, retry } = useProjects(
     useDebounce(param, 200)
   );
   const { data: users } = useUsers();
+  const dispatch = useDispatch();
+  console.log(store.getState());
 
   return (
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <ButtonNoPadding onClick={openModal} type={"link"}>
+        <ButtonNoPadding
+          onClick={() => dispatch(projectListActions.openProjectModal())}
+          type={"link"}
+        >
           创建项目
         </ButtonNoPadding>
       </Row>
