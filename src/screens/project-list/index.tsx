@@ -1,54 +1,50 @@
-import { useEffect, useState } from "react";
 import React from "react";
-import { SearchPanel } from "./search-panel";
-import { List } from "./list";
-import { cleanObject, useDebounce, useMount } from "../../utils";
-import qs from "qs";
+import { SearchPanel } from "screens/project-list/search-panel";
+import { List } from "screens/project-list/list";
+import { useDebounce, useDocumentTitle } from "utils";
+import styled from "@emotion/styled";
+import { useProjects } from "utils/project";
+import { useUsers } from "utils/user";
+import {
+  useProjectModal,
+  useProjectsSearchParams,
+} from "screens/project-list/util";
+import {
+  ButtonNoPadding,
+  ErrorBox,
+  Row,
+  ScreenContainer,
+} from "components/lib";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+// 状态提升可以让组件共享状态，但是容易造成 prop drilling
 
+// 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
+// https://codesandbox.io/s/keen-wave-tlz9s?file=/src/App.js
+
+// 使用 JS 的同学，大部分的错误都是在 runtime(运行时) 的时候发现的
+// 我们希望，在静态代码中，就能找到其中的一些错误 -> 强类型
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
-  const [list, setList] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [userMap, setUserMap] = useState({});
-  const deboundedValue = useDebounce(param, 200);
+  useDocumentTitle("项目列表", false);
 
-  useEffect(() => {
-    let url = `${apiUrl}/projects?${qs.stringify(cleanObject(deboundedValue))}`;
-    console.log("url is :", url);
-    fetch(url).then(async (res) => {
-      if (res.ok) {
-        const data = await res.json();
-        setList(data);
-      }
-    });
-  }, [deboundedValue]);
+  const { open } = useProjectModal();
 
-  useMount(() => {
-    fetch(`${apiUrl}/users`).then(async (res) => {
-      if (res.ok) {
-        const data = await res.json();
-        console.log("apiurl:", apiUrl, "initialized users:", data);
-        setUsers(data);
-
-        const userMap = data.reduce((acc: any, user: any) => {
-          acc[user.id] = user;
-          return acc;
-        }, {});
-        console.log("userMap:", userMap);
-        setUserMap(userMap);
-      }
-    });
-  });
+  const [param, setParam] = useProjectsSearchParams();
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
+  const { data: users } = useUsers();
 
   return (
-    <div>
-      <SearchPanel param={param} setParam={setParam} users={users} />
-      <List list={list} users={users} userMap={userMap} />
-    </div>
+    <ScreenContainer>
+      <Row between={true}>
+        <h1>项目列表</h1>
+        <ButtonNoPadding onClick={open} type={"link"}>
+          创建项目
+        </ButtonNoPadding>
+      </Row>
+      <SearchPanel users={users || []} param={param} setParam={setParam} />
+      <ErrorBox error={error} />
+      <List loading={isLoading} users={users || []} dataSource={list || []} />
+    </ScreenContainer>
   );
 };
+
+ProjectListScreen.whyDidYouRender = false;
