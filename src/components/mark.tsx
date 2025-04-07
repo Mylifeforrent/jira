@@ -1,16 +1,16 @@
 import React from "react";
 
-export const Mark = ({ name, keyword }: { name: string; keyword?: string }) => {
+export const Mark = ({ name, keyword }: { name: string; keyword: string }) => {
   if (!keyword) {
-    return <span>{name}</span>;
+    return <>{name}</>;
   }
-  const full = name.split(keyword);
+  const arr = name.split(keyword);
   return (
     <>
-      {full.map((str, index) => (
-        <span key={str + index}>
+      {arr.map((str, index) => (
+        <span key={index}>
           {str}
-          {index === full.length - 1 ? null : (
+          {index === arr.length - 1 ? null : (
             <span style={{ color: "#257AFD" }}>{keyword}</span>
           )}
         </span>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import { KanbanScreen } from "screens/kanban";
@@ -16,11 +16,11 @@ export const ProjectScreen = () => {
   return (
     <Container>
       <Aside>
-        <Menu mode="inline" selectedKeys={[routeType]}>
-          <Menu.Item key="kanban">
+        <Menu mode={"inline"} selectedKeys={[routeType]}>
+          <Menu.Item key={"kanban"}>
             <Link to={"kanban"}>看板</Link>
           </Menu.Item>
-          <Menu.Item key="epic">
+          <Menu.Item key={"epic"}>
             <Link to={"epic"}>任务组</Link>
           </Menu.Item>
         </Menu>
@@ -38,22 +38,19 @@ export const ProjectScreen = () => {
   );
 };
 
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: 16rem 1fr;
-`;
-
 const Aside = styled.aside`
   background-color: rgb(244, 245, 247);
   display: flex;
 `;
 
-// overflow: hidden 可以让一个flex容器不扩张
-// stretch: https://stackoverflow.com/questions/15381172/how-can-i-make-flexbox-children-100-height-of-their-parent
-const Main = styled.main`
+const Main = styled.div`
   box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  padding: 2rem 2rem 0;
   display: flex;
-  align-items: stretch;
+  overflow: hidden;
+`;
+
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  width: 100%;
 `;

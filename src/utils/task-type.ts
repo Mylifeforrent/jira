@@ -4,10 +4,6 @@ import { TaskType } from "types/task-type";
 
 export const useTaskTypes = () => {
   const client = useHttp();
-  return useQuery<TaskType[]>({
-    queryKey: ["taskTypes"],
-    queryFn: () => {
-      return client("taskTypes");
-    },
-  });
+
+  return useQuery<TaskType[]>(["taskTypes"], () => client("taskTypes"));
 };

@@ -2,19 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useAddTask } from "utils/task";
 import { useProjectIdInUrl, useTasksQueryKey } from "screens/kanban/util";
 import { Card, Input } from "antd";
-import styled from "@emotion/styled";
 
 export const CreateTask = ({ kanbanId }: { kanbanId: number }) => {
   const [name, setName] = useState("");
-  const { mutateAsync: createTask } = useAddTask(useTasksQueryKey());
-  const [inputMode, setInputMode] = useState(false);
+  const { mutateAsync: addTask } = useAddTask(useTasksQueryKey());
   const projectId = useProjectIdInUrl();
+  const [inputMode, setInputMode] = useState(false);
 
-  const submit = () => {
-    createTask({ kanbanId, name, projectId }).then(() => {
-      setInputMode(false);
-      setName("");
-    });
+  const submit = async () => {
+    await addTask({ projectId, name, kanbanId });
+    setInputMode(false);
+    setName("");
   };
 
   const toggle = () => setInputMode((mode) => !mode);
@@ -26,7 +24,7 @@ export const CreateTask = ({ kanbanId }: { kanbanId: number }) => {
   }, [inputMode]);
 
   if (!inputMode) {
-    return <Container onClick={toggle}>+创建事务</Container>;
+    return <div onClick={toggle}>+创建事务</div>;
   }
 
   return (
@@ -42,9 +40,3 @@ export const CreateTask = ({ kanbanId }: { kanbanId: number }) => {
     </Card>
   );
 };
-
-const Container = styled.div`
-  padding-left: 0.5rem;
-  padding-top: 0.5rem;
-  cursor: pointer;
-`;
