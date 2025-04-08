@@ -30,6 +30,7 @@ export const http = async (
   }
 
   // axios 和 fetch 的表现不一样，axios可以直接在返回状态不为2xx的时候抛出异常
+  //fetch 在返回不是200时候， 加上catch没有效果，这里要注意
   return window
     .fetch(`${apiUrl}/${endpoint}`, config)
     .then(async (response) => {
