@@ -2,12 +2,19 @@ html {
   /* rem em */
   /*em 相对于父元素的font-size*/
   /*rem 相对于根元素html的font-size, r就是root的意思*/
+  /**
+  浏览器默认像素是16像素，16*62.5% = 10px， 所以设置62.5%是为了方便计算，页面中的1rem 就等于10px，
+  如果ui给我们设计稿是100px像素，那么我们只需要设置10rem就可以了。方便对应ui的设计
+   */
   /*16 * 62.5% = 10px*/
   /*1rem === 10px*/
   font-size: 62.5%;
 }
 
 /*viewport height === vh*/
+/**
+100vh 这里vh就是viewpoint height, 就是视口的高度。
+ */
 html body #root .App {
   min-height: 100vh;
 }

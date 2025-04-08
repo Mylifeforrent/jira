@@ -54,7 +54,7 @@ const Background = styled.div`
   background-position: left bottom, right bottom;
   background-size: calc(((100vw - 40rem) / 2) - 3.2rem),
     calc(((100vw - 40rem) / 2) - 3.2rem), cover;
-  background-image: url(${left}), url(${right});
+  background-image: url(${left}), url(${right}); 
 `;
 
 const Header = styled.header`
@@ -64,6 +64,7 @@ const Header = styled.header`
   width: 100%;
 `;
 
+// 这里的 Card 是 antd 的 Card， 不可以采用 styled.card, 因为card不是一个 html 标签。 所以需要采用括号包装
 const ShadowCard = styled(Card)`
   width: 40rem;
   min-height: 56rem;
@@ -74,6 +75,7 @@ const ShadowCard = styled(Card)`
   text-align: center;
 `;
 
+//webstorm 需要安装styled-components 插件，vscode需要安装vscode-styled-components 插件， 这样就可以高亮显示了，可以提示
 const Container = styled.div`
   display: flex;
   flex-direction: column;

@@ -86,6 +86,7 @@ const User = () => {
   );
 };
 
+//grid布局很强大，有时候比flex box模型更好
 // temporal dead zone(暂时性死区)
 const Container = styled.div`
   display: grid;
@@ -98,10 +99,12 @@ const Header = styled(Row)`
   padding: 3.2rem;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   z-index: 1;
+    //height: 6rem; header和main占据整个屏幕的高度，所以如果它是6rem，main就是calc(100vh-6rem)
 `;
 const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;
 const Main = styled.main`
   display: flex;
   overflow: hidden;
+    //height: calc(100vh-6rem );
 `;
