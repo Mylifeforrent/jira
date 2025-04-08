@@ -1,6 +1,7 @@
 import React from "react";
 import { ProjectListScreen } from "screens/project-list";
 import { useAuth } from "context/auth-context";
+//把svg以react组建的形式引入进来，注意要大写
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import styled from "@emotion/styled";
 import { ButtonNoPadding, Row } from "components/lib";
@@ -53,6 +54,7 @@ const PageHeader = () => {
     <Header between={true}>
       <HeaderLeft gap={true}>
         <ButtonNoPadding type={"link"} onClick={resetRoute}>
+          {/*//logo类似组建的方式引入进来，就可以定义宽度了*/}
           <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
         </ButtonNoPadding>
         <ProjectPopover />
@@ -79,6 +81,7 @@ const User = () => {
         </Menu>
       }
     >
+      {/*preventDefault用来防止页面重新刷新*/}
       <Button type={"link"} onClick={(e) => e.preventDefault()}>
         Hi, {user?.name}
       </Button>
