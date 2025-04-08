@@ -88,7 +88,7 @@ export const useArray = <T>(initialArray: T[]) => {
     },
   };
 };
-
+//参数有默认状态的时候，他就是可选的
 export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
   const oldTitle = useRef(document.title).current;
   // 页面加载时: 旧title
