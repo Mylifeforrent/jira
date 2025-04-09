@@ -92,6 +92,7 @@ export const useArray = <T>(initialArray: T[]) => {
 };
 //参数有默认状态的时候，他就是可选的
 export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
+  //useRef初始化之后current就会保留最初时的值，不会改变。这样就可以把它的。current当作一个永久的初始化值了
   const oldTitle = useRef(document.title).current;
   // 页面加载时: 旧title
   // 加载后：新title
