@@ -101,6 +101,10 @@ export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
   }, [title]);
 
   useEffect(() => {
+
+    //return函数在页面卸载的时候就会调用
+    //因为是闭包的概念，所以如果不添加任何的dependency，那么这个useEffect的卸载函数只会在初始化的时候拿到最初的值，后续无论那个值如何改动。它这个闭包里面的值不会更新
+    //因此要合理的使用dependency去保证闭包及时更新他的引用的值
     return () => {
       if (!keepOnUnmount) {
         // 如果不指定依赖，读到的就是旧title
