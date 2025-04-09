@@ -30,6 +30,8 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    //eslint提示这里应该加上依赖项，但是如果加上callback依赖想，会无限callback。这个问题和useCallback,useMemo有关系，eslint不一定都是对的，
+    // 这里我们不需要把callback当作依赖项添加进去，所以可以添加eslint-disable-next-line去禁掉这个报错， react-hooks/exhaustive-deps是从console里copy过来的
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

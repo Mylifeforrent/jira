@@ -14,10 +14,12 @@ import {
 import { Project } from "types/project";
 import { User } from "types/user";
 
+//这里直接把Table组建的props传递过来，当作父属性继承，这样就可以不用每次在listprops里面添加属性了。尽量减少代码改动
 interface ListProps extends TableProps<Project> {
   users: User[];
 }
 
+//这里{users,...props} 分为两个部分就是说从listpropts把users取出来单独放，剩余的采用...props放到props里面去 所以此时props=Omit<ListProps, "users">
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject(useProjectsQueryKey());
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
@@ -77,7 +79,7 @@ export const List = ({ users, ...props }: ListProps) => {
           },
         },
       ]}
-      {...props}
+      {...props}//props 这里就可以把传过来的属性放进去. 这个操作符会把里面的键值对展开放进去。 类似于name={jack},age={8}
     />
   );
 };

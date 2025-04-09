@@ -41,6 +41,7 @@ export const ProjectListScreen = () => {
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       <ErrorBox error={error} />
+      {/*// dataSource={list || []}表示给一个默认的空数组，就不会报错undifined不能赋值给它了*/}
       <List loading={isLoading} users={users || []} dataSource={list || []} />
     </ScreenContainer>
   );

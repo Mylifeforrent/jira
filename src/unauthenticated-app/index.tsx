@@ -13,6 +13,9 @@ export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  //useState反悔的setError之类的函数是异步函数， 所以它们的值是异步的
+  //比如 setNum(num+1),console.log(num). num假设初始值是0，那么打印出来是0，而不是1，就是因为他是异步的。总是慢半拍。第二次打印才是1。 所以不要和同步代码一起使用
+
   useDocumentTitle("请登录注册以继续");
 
   return (
