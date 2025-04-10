@@ -3,6 +3,9 @@ import { Dropdown, Menu, Modal, Table } from "antd";
 import dayjs from "dayjs";
 import { TableProps } from "antd/es/table";
 // react-router 和 react-router-dom的关系，类似于 react 和 react-dom/react-native/react-vr...
+//react用来核心操作，比如dom的diff 状态管理。 react-dom用来接受react计算好的状态之类的东西来进行浏览器渲染，因为dom是浏览器使用的有依赖关系
+//同样 react-native是存在于手机端android，macos上面进行各种渲染之类的。同类的react-vr是vr设备使用的
+//下面的link是用来在浏览器渲染的，所以肯定是从react-dom引入
 import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useDeleteProject, useEditProject } from "utils/project";
