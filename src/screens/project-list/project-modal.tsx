@@ -104,3 +104,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+
+//如果单独启用某一个指定的函数组建的render检查，那么就这样写
+// ProjectModal.whyDidYouRender = true
+//react在渲染的时候对比的是引用，而不是值。所以引用如果变了，就会重新渲染 这点要注意
