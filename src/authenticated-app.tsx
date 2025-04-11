@@ -91,6 +91,16 @@ const User = () => {
 
 //grid布局很强大，有时候比flex box模型更好
 // temporal dead zone(暂时性死区)
+//为啥container定义在后面却不报错。因为页面AuthenticatedApp使用它时候他还没有定义。这是为什么呢
+//举例子： 浏览器console中测试
+//console.log(a); var a=1
+//undefined
+//var a = undefined; console.log(a);var a=1
+//说明var是进行了变量提升，提升为了undefined
+//console.log(b);const b=1 //报错 can not access 'b' before initialization, 貌似这个错误是浏览器知道我们后面定义的参数b是存在的
+//console.log(c) //报错 c is not defined
+//这里的解释就是我们只是在最上面定义了container，即使container还没有初始化。他也不会报错。因为它只是定义了，还没有运行。
+// 因此不会报错。项目启动之后应该就是页面加载的时候这个container定义了。然后用户访问页面的时候才执行。 那么就管理好了执行顺序，就不会报错了
 const Container = styled.div`
   display: grid;
   grid-template-rows: 6rem 1fr;
