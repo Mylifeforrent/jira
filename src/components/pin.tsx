@@ -11,6 +11,7 @@ export const Pin = ({ checked, onCheckedChange, ...restProps }: PinProps) => {
     <Rate
       count={1}
       value={checked ? 1 : 0}
+      //because onCheckedChange is optional. so it may be undefined, so we need to use ? to indicate that it's optional for below function
       onChange={(num) => onCheckedChange?.(!!num)}
       {...restProps}
     />

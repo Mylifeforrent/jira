@@ -41,7 +41,7 @@ export const  useProjects = (param?: Partial<Project>) => {
     client("projects", { data: param })
   );
 };
-
+//hook function can not be called in a callback function. pls note. we can only return the function inside this hook, and then returned function can be called in callback function
 export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
   return useMutation(

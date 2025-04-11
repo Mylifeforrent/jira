@@ -2,10 +2,11 @@ import React from "react";
 import { Raw } from "types";
 import { Select } from "antd";
 
+//utility utils, used to get all properties of Select component
 type SelectProps = React.ComponentProps<typeof Select>;
 
 interface IdSelectProps
-  extends Omit<SelectProps, "value" | "onChange" | "options"> {
+  extends Omit<SelectProps, "value" | "onChange" | "options"> {//exclude value,onchange.options so we can define ourselves' one
   value?: Raw | null | undefined;
   onChange?: (value?: number) => void;
   defaultOptionName?: string;

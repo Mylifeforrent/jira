@@ -37,6 +37,12 @@ export const List = ({ users, ...props }: ListProps) => {
             return (
               <Pin
                 checked={project.pin}
+                //因为project是提前知道的变量，pin是方法里面的变量。所以这里可以采用颗粒化方式来写这个函数，
+                //const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
+                //onCheckedChange={pinProject(project.id)}
+                //============== 上面和下面写法一样的效果=========
+                //const pinProject=(id,number,pin:boolean)=>mutate({id,pin})
+                //onCheckedChange={pin => pinProject(project.id,pin)}
                 onCheckedChange={pinProject(project.id)}
               />
             );
