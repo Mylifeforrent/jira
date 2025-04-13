@@ -26,9 +26,93 @@ import { UserPopover } from "components/user-popover";
  *
  */
 
+/**
+ * ### React 组件组合（Component Composition）示例
+ *
+ * 组件组合是 React 中一种强大的模式，它允许我们通过将多个组件组合在一起构建复杂的 UI，同时保持代码的可重用性和可维护性。
+ *
+ * #### 示例：组件组合
+ *
+ * 以下是一个简单的例子，展示如何使用组件组合来构建一个弹窗组件：
+ *
+ * ```typescriptreact
+ * import React from "react";
+ *
+ * // 通用的容器组件
+ * const Modal = ({ children }: { children: React.ReactNode }) => {
+ *   return (
+ *     <div style={{ border: "1px solid black", padding: "1rem", width: "300px" }}>
+ *       {children}
+ *     </div>
+ *   );
+ * };
+ *
+ * // 标题组件
+ * const ModalHeader = ({ title }: { title: string }) => {
+ *   return <h2>{title}</h2>;
+ * };
+ *
+ * // 内容组件
+ * const ModalContent = ({ content }: { content: string }) => {
+ *   return <p>{content}</p>;
+ * };
+ *
+ * // 操作按钮组件
+ * const ModalActions = ({ onClose }: { onClose: () => void }) => {
+ *   return <button onClick={onClose}>关闭</button>;
+ * };
+ *
+ * // 使用组件组合构建完整的弹窗
+ * const App = () => {
+ *   const handleClose = () => {
+ *     alert("弹窗关闭");
+ *   };
+ *
+ *   return (
+ *     <Modal>
+ *       <ModalHeader title="弹窗标题" />
+ *       <ModalContent content="这是弹窗的内容" />
+ *       <ModalActions onClose={handleClose} />
+ *     </Modal>
+ *   );
+ * };
+ *
+ * export default App;
+ * ```
+ *
+ * #### 运行效果
+ * - `Modal` 是一个通用的容器组件，负责提供弹窗的布局。
+ * - `ModalHeader`、`ModalContent` 和 `ModalActions` 是具体的子组件，分别负责标题、内容和操作按钮。
+ * - 通过组合这些组件，我们可以轻松构建一个功能完整的弹窗。
+ *
+ * ---
+ *
+ * ### 组件组合的好处
+ *
+ * 1. **高可重用性**：
+ *    - 每个子组件（如 `ModalHeader`、`ModalContent`）可以在其他地方单独使用，减少重复���码。
+ *
+ * 2. **关注点分离**：
+ *    - 每个组件只关注自己的职责（如标题、内容、操作按钮），使代码更易于理解和维护。
+ *
+ * 3. **灵活性**：
+ *    - 父组件可以通过 `props` 向子组件传递数据，子组件的行为可以根据父组件的需求动态调整。
+ *
+ * 4. **可测试性**：
+ *    - 每个子组件可以单独测试，确保其功能正确。
+ *
+ * 5. **易于扩展**：
+ *    - 如果需要添加新��能（如弹窗的动画效果），可以通过扩展现有组件或添加新组件来实现，而无需修改现有代码。
+ *
+ * 通过组件组合，React 提供了一种模块化的方式来构建复杂的 UI，同时保持代码的简洁和可维护性。
+ * @constructor
+ */
 // prop drilling
 
 export const AuthenticatedApp = () => {
+  //如果采用父组件管理状态的方案来实现子组建状态共享，那么最直接的一个方式就是把这个状态提升到子组件共同的父组件那里面去。从而实现子组建状态共享和协调
+  //比如这里可以写 const[projectmodalopen,setprojectmodalopen] = useState(false)
+  //注意这是采用redux组件之类的状态管理组件之外的一种原始方案
   return (
     <Container>
       <Router>
