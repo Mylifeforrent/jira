@@ -20,6 +20,7 @@ export const projectListSlice = createSlice({
   initialState,
   reducers: {
     openProjectModal(state) {
+      //之所以可以直接拿来state操作，而是因为底层采用了Immer，是封装了一下。给你返回的state是类似于一个影子。所以不会影响原本的state纯洁性
       state.projectModalOpen = true;
     },
     closeProjectModal(state) {
