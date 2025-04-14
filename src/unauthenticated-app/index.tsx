@@ -85,3 +85,10 @@ const Container = styled.div`
   align-items: center;
   min-height: 100vh;
 `;
+
+
+/**
+ * redux里面的高阶组建使用方式 比如connect（mapstatetoprops，mapacttoprops） 这个操作的名字叫做，容器组件与展示组件分离
+ * HOC高阶组件，可以平常工作中拿来作为一个思考思路，不过hook出来之后就没有那么火了
+ * 目前使用redux就使用useselector了，不再使用高阶组件的方式了。
+ */
